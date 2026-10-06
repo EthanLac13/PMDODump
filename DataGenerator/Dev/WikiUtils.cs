@@ -145,18 +145,14 @@ namespace DataGenerator.Dev
             {"floette_0", DataManager.Instance.GetMonster("floette").Name.ToLocal()},
             {"florges_0", DataManager.Instance.GetMonster("florges").Name.ToLocal()},
             {"furfrou_0", DataManager.Instance.GetMonster("furfrou").Name.ToLocal()},
-            {"aegislash_0", DataManager.Instance.GetMonster("aegislash").Name.ToLocal()},
-            {"pumpkaboo_0", DataManager.Instance.GetMonster("pumpkaboo").Name.ToLocal()},
-            {"gourgeist_0", DataManager.Instance.GetMonster("gourgeist").Name.ToLocal()},
             {"xerneas_0", DataManager.Instance.GetMonster("xerneas").Name.ToLocal()},
             {"minior_0", DataManager.Instance.GetMonster("minior").Name.ToLocal()},
-            {"minior_7", "Core " + DataManager.Instance.GetMonster("minior").Name.ToLocal()},
-            {"toxtricity_0", DataManager.Instance.GetMonster("toxtricity").Name.ToLocal()}
+            {"minior_7", "Core " + DataManager.Instance.GetMonster("minior").Name.ToLocal()}
         };
         
         public static void PrintMonsterWiki()
         {
-            Dictionary<string, string> encounterDict = PrintEncounterWiki();
+            //Dictionary<string, string> encounterDict = PrintEncounterWiki();
 
             List<string> itemKeys = DataManager.Instance.DataIndices[DataManager.DataType.Monster].GetOrderedKeys(true);
             for (int ii = 0; ii < itemKeys.Count; ii++)
@@ -291,6 +287,7 @@ namespace DataGenerator.Dev
                             if (!stats_completed) // Check for duplicate form name and append form number as a fallback
                                 stats_completed = WriteToWiki(strippedName + "_" + form + "/Stats", statsFileContent);
 
+                            /*
                             // Write locations entry
                             if (encounterDict.ContainsKey(formName))
                             { 
@@ -311,6 +308,7 @@ namespace DataGenerator.Dev
                                     }
                                 }
                             }
+                            */
                         }
                     }
                 }
@@ -552,6 +550,14 @@ namespace DataGenerator.Dev
                     }
                 }
 
+                // Create redirects for family members
+                string firstFormStrippedName = startingMonster.Name.DefaultText;
+                firstFormStrippedName = firstFormStrippedName.Replace(".", "").Replace(":", "").Replace("?", "Question Mark").Replace("!", "Exclamation Mark").Replace("%", " Percent").Replace(" ", "_");
+                if (!singleStageFamily)
+                {
+                    firstFormStrippedName += "_family";
+                }
+
                 // Keep track of names that have already been used in the data structure
                 List<String> namesAlreadyUsed = new List<string>();
                 // List of monster names to make a redirect for
@@ -602,12 +608,6 @@ namespace DataGenerator.Dev
                 fileContent += "\r\n";
 
                 // Write to file
-                string firstFormStrippedName = startingMonster.Name.DefaultText;
-                firstFormStrippedName = firstFormStrippedName.Replace(".", "").Replace(":", "").Replace("?", "Question Mark").Replace("!", "Exclamation Mark").Replace("%", " Percent").Replace(" ", "_");
-                if (!singleStageFamily)
-                {
-                    firstFormStrippedName += "_family";
-                }
 
                 bool completed = WriteToWiki(firstFormStrippedName, fileContent);
                 if (!completed) // Check for duplicate form name and append form number as a fallback
@@ -626,6 +626,16 @@ namespace DataGenerator.Dev
                         {
                             WriteToWiki(namesAlreadyUsed[redirectNameIndex], "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "#" + redirectNames[redirectNameIndex] + "]]");
                         }
+                    }
+                }
+
+                // Create redirects for other family members
+                foreach (List<string> monsterFormIDList in monsterFormIDData)
+                {
+                    foreach (string monsterFormID in monsterFormIDList)
+                    {
+                        MonsterData redirectMonster = DataManager.Instance.GetMonster(monsterFormID.Substring(0, monsterFormID.Length - 2));
+                        WriteToWiki(redirectMonster.Name.ToLocal(), "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "]]");
                     }
                 }
             }
