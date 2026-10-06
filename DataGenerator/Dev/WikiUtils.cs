@@ -137,13 +137,21 @@ namespace DataGenerator.Dev
         public static Dictionary<string, string> formNameOverrideDict = new Dictionary<string, string>()
         {
             {"unown_0", DataManager.Instance.GetMonster("unown").Name.ToLocal()},
+            {"shellos_0", DataManager.Instance.GetMonster("shellos").Name.ToLocal()},
+            {"gastrodon_0", DataManager.Instance.GetMonster("gastrodon").Name.ToLocal()},
+            {"basculin_0", DataManager.Instance.GetMonster("basculin").Name.ToLocal()},
             {"darmanitan_0", DataManager.Instance.GetMonster("darmanitan").Name.ToLocal()},
             {"flabebe_0", DataManager.Instance.GetMonster("flabebe").Name.ToLocal()},
             {"floette_0", DataManager.Instance.GetMonster("floette").Name.ToLocal()},
             {"florges_0", DataManager.Instance.GetMonster("florges").Name.ToLocal()},
+            {"furfrou_0", DataManager.Instance.GetMonster("furfrou").Name.ToLocal()},
+            {"aegislash_0", DataManager.Instance.GetMonster("aegislash").Name.ToLocal()},
+            {"pumpkaboo_0", DataManager.Instance.GetMonster("pumpkaboo").Name.ToLocal()},
+            {"gourgeist_0", DataManager.Instance.GetMonster("gourgeist").Name.ToLocal()},
             {"xerneas_0", DataManager.Instance.GetMonster("xerneas").Name.ToLocal()},
             {"minior_0", DataManager.Instance.GetMonster("minior").Name.ToLocal()},
-            {"minior_7", "Core " + DataManager.Instance.GetMonster("minior").Name.ToLocal()}
+            {"minior_7", "Core " + DataManager.Instance.GetMonster("minior").Name.ToLocal()},
+            {"toxtricity_0", DataManager.Instance.GetMonster("toxtricity").Name.ToLocal()}
         };
         
         public static void PrintMonsterWiki()
@@ -546,6 +554,7 @@ namespace DataGenerator.Dev
 
                 // Keep track of names that have already been used in the data structure
                 List<String> namesAlreadyUsed = new List<string>();
+                // List of monster names to make a redirect for
                 List<String> redirectNames = new List<string>();
                 int currentFormNumber = 0;
 
