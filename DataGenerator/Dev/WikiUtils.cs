@@ -134,6 +134,18 @@ namespace DataGenerator.Dev
             }
         }
 
+        public static Dictionary<string, string> formNameOverrideDict = new Dictionary<string, string>()
+        {
+            {"unown_0", DataManager.Instance.GetMonster("unown").Name.ToLocal()},
+            {"darmanitan_0", DataManager.Instance.GetMonster("darmanitan").Name.ToLocal()},
+            {"flabebe_0", DataManager.Instance.GetMonster("flabebe").Name.ToLocal()},
+            {"floette_0", DataManager.Instance.GetMonster("floette").Name.ToLocal()},
+            {"florges_0", DataManager.Instance.GetMonster("florges").Name.ToLocal()},
+            {"xerneas_0", DataManager.Instance.GetMonster("xerneas").Name.ToLocal()},
+            {"minior_0", DataManager.Instance.GetMonster("minior").Name.ToLocal()},
+            {"minior_7", "Core " + DataManager.Instance.GetMonster("minior").Name.ToLocal()}
+        };
+        
         public static void PrintMonsterWiki()
         {
             Dictionary<string, string> encounterDict = PrintEncounterWiki();
@@ -166,6 +178,11 @@ namespace DataGenerator.Dev
                             lastValidForm = form;
 
                             string formName = formData.FormName.DefaultText;
+                            string uniqueFormIdentifier = key + "_" + form.ToString();
+                            if (formNameOverrideDict.ContainsKey(uniqueFormIdentifier))
+                            {
+                                formName = formNameOverrideDict[uniqueFormIdentifier];
+                            }
                             string strippedName = formName.Replace(".", "").Replace(":", "").Replace("?", "Question Mark").Replace("!", "Exclamation Mark").Replace("%", " Percent").Replace(" ", "_");
 
 
@@ -456,6 +473,7 @@ namespace DataGenerator.Dev
             // Get a list of first-form Pokemon to serve as the evolution tree's roots
             List<string> itemKeys = DataManager.Instance.DataIndices[DataManager.DataType.Monster].GetOrderedKeys(true);
             List<MonsterData> firstFormMonsters = new List<MonsterData>();
+            List<string> firstFormMonsterIDs = new List<string>();
             for (int ii = 0; ii < itemKeys.Count; ii++)
             {
                 string key = itemKeys[ii];
@@ -467,6 +485,7 @@ namespace DataGenerator.Dev
                         if (entry.IndexNum > 0)
                         {
                             firstFormMonsters.Add(entry);
+                            firstFormMonsterIDs.Add(key);
                         }
                     }
                 }
@@ -478,6 +497,7 @@ namespace DataGenerator.Dev
             for (int ii = 0; ii < firstFormMonsters.Count; ii++)
             {
                 List<List<MonsterFormData>> monsterFamilyData = new List<List<MonsterFormData>>();
+                List<List<string>> monsterFormIDData = new List<List<string>>();
 
                 // Get the base form
                 MonsterData startingMonster = firstFormMonsters[ii];
@@ -498,25 +518,29 @@ namespace DataGenerator.Dev
                         lastValidForm = form;
 
                         List<MonsterFormData> currentEvolutionBranch = new List<MonsterFormData>();
+                        List<string> currentBranchFormIDs = new List<string>();
                         currentEvolutionBranch.Add((MonsterFormData)startingMonster.Forms[form]);
+                        currentBranchFormIDs.Add(firstFormMonsterIDs[ii] + "_" + form.ToString());
 
                         // Get list of valid evolutions
-                        List<MonsterFormData> validEvolutions = StrategyGuide.EvaluateMonsterEvolution(startingMonster, form, startingMonster.Promotions);
-                        for (int validEvolutionIndex = 0; validEvolutionIndex < validEvolutions.Count; validEvolutionIndex++)
+                        Dictionary<string, MonsterFormData> validEvolutions = StrategyGuide.EvaluateMonsterEvolution(startingMonster, form, startingMonster.Promotions);
+                        foreach (string monsterFormID in validEvolutions.Keys)
                         {
                             singleStageFamily = false;
-                            MonsterFormData currentEvolution = validEvolutions[validEvolutionIndex];
+                            MonsterFormData currentEvolution = validEvolutions[monsterFormID];
                             if (currentEvolution.Released)
                             {
                                 if (currentEvolutionBranch.IndexOf(currentEvolution) == -1)
                                 {
                                     currentEvolutionBranch.Add(currentEvolution);
+                                    currentBranchFormIDs.Add(monsterFormID);
                                 }
                             }
                         }
 
                         // Add this branch of the family tree to the family list
                         monsterFamilyData.Add(currentEvolutionBranch);
+                        monsterFormIDData.Add(currentBranchFormIDs);
                     }
                 }
 
@@ -537,7 +561,15 @@ namespace DataGenerator.Dev
                         MonsterFormData currentMonsterForm = monsterFamilyData[evolutionBranchIndex][familyMemberIndex];
 
                         string formName = currentMonsterForm.FormName.DefaultText;
+                        //Console.WriteLine(monsterFormIDData[evolutionBranchIndex][familyMemberIndex]);
+                        if (formNameOverrideDict.ContainsKey(monsterFormIDData[evolutionBranchIndex][familyMemberIndex]))
+                        {
+                            formName = formNameOverrideDict[monsterFormIDData[evolutionBranchIndex][familyMemberIndex]];
+                        }
                         string strippedName = formName.Replace(".", "").Replace(":", "").Replace("?", "Question Mark").Replace("!", "Exclamation Mark").Replace("%", " Percent").Replace(" ", "_");
+
+                        //Console.WriteLine(formName);
+                        //Console.WriteLine(monsterFormIDData[evolutionBranchIndex][familyMemberIndex]);
 
                         if (namesAlreadyUsed.Contains(strippedName))
                         {
