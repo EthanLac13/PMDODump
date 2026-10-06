@@ -527,12 +527,10 @@ namespace DataGenerator.Dev
 
                 // Print the Pokemon family page
                 string fileContent = "__NOTOC__";
+                fileContent += "\r\n\r\n<tabber wrap=true>";
 
                 for (int evolutionBranchIndex = 0; evolutionBranchIndex < monsterFamilyData.Count; evolutionBranchIndex++)
                 {
-                    // Create tabs for each evolution branch
-                    fileContent += "\r\n\r\n<tabs>";
-
                     // For each Pokemon in the branch, add a tab for it
                     for(int familyMemberIndex = 0; familyMemberIndex < monsterFamilyData[evolutionBranchIndex].Count; familyMemberIndex++)
                     {
@@ -550,22 +548,16 @@ namespace DataGenerator.Dev
                         {
                             currentFormNumber = 0;
                         }
-
-                        fileContent += ("\r\n<tab name=\"" + formName + "\">{{:" + strippedName + "/Data|PokemonInfobox}}</tab>");
+                        fileContent += "\r\n|-|" + formName + "=";
+                        fileContent += "\r\n{{:" + strippedName + "/Data|PokemonInfobox}}";
 
                         namesAlreadyUsed.Add(strippedName);
                         redirectNames.Add(formName);
                     }
+                }
 
-                    // End the tab
-                    fileContent += "\r\n</tabs>";
-                }
-                /*
-                foreach (string nameUsed in namesAlreadyUsed)
-                {
-                    Console.WriteLine(nameUsed);
-                }
-                */
+                // End the tabber
+                fileContent += "\r\n</tabber>";
                 fileContent += "\r\n";
 
                 // Write to file
