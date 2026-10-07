@@ -624,7 +624,7 @@ namespace DataGenerator.Dev
                         }
                         else
                         {
-                            WriteToWiki(namesAlreadyUsed[redirectNameIndex], "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "#tabber-" + redirectNames[redirectNameIndex] + "]]");
+                            WriteToWiki(namesAlreadyUsed[redirectNameIndex], "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "#tabber-" + redirectNames[redirectNameIndex].Replace(" ", "_") + "]]");
                         }
                     }
                 }
