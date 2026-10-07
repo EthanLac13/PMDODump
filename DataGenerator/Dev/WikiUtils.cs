@@ -566,12 +566,12 @@ namespace DataGenerator.Dev
 
                 // Print the Pokemon family page
                 string fileContent = "__NOTOC__";
-                fileContent += "\r\n\r\n<tabber wrap=true>";
 
                 for (int evolutionBranchIndex = 0; evolutionBranchIndex < monsterFamilyData.Count; evolutionBranchIndex++)
                 {
+                    fileContent += "\r\n\r\n<tabber class=\"mw-collapsible\">";
                     // For each Pokemon in the branch, add a tab for it
-                    for(int familyMemberIndex = 0; familyMemberIndex < monsterFamilyData[evolutionBranchIndex].Count; familyMemberIndex++)
+                    for (int familyMemberIndex = 0; familyMemberIndex < monsterFamilyData[evolutionBranchIndex].Count; familyMemberIndex++)
                     {
                         MonsterFormData currentMonsterForm = monsterFamilyData[evolutionBranchIndex][familyMemberIndex];
 
@@ -601,10 +601,10 @@ namespace DataGenerator.Dev
                         namesAlreadyUsed.Add(strippedName);
                         redirectNames.Add(formName);
                     }
-                }
 
-                // End the tabber
-                fileContent += "\r\n</tabber>";
+                    // End the tabber
+                    fileContent += "\r\n</tabber>";
+                }
                 fileContent += "\r\n";
 
                 // Write to file
