@@ -624,7 +624,7 @@ namespace DataGenerator.Dev
                         }
                         else
                         {
-                            WriteToWiki(namesAlreadyUsed[redirectNameIndex], "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "#" + redirectNames[redirectNameIndex] + "]]");
+                            WriteToWiki(namesAlreadyUsed[redirectNameIndex], "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "#tabber-" + redirectNames[redirectNameIndex] + "]]");
                         }
                     }
                 }
@@ -635,7 +635,8 @@ namespace DataGenerator.Dev
                     foreach (string monsterFormID in monsterFormIDList)
                     {
                         MonsterData redirectMonster = DataManager.Instance.GetMonster(monsterFormID.Substring(0, monsterFormID.Length - 2));
-                        WriteToWiki(redirectMonster.Name.ToLocal(), "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "]]");
+                        string redirectMonsterName = redirectMonster.Name.ToLocal();
+                        WriteToWiki(redirectMonster.Name.ToLocal(), "#REDIRECT [[" + firstFormStrippedName.Replace("_", " ") + "#tabber-" + redirectMonsterName.Replace(" ", "_") + "]]");
                     }
                 }
             }
